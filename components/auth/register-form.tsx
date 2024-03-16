@@ -1,10 +1,12 @@
 "use client";
 
-import * as React from "react";
+import { useState, useTransition } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { RegisterSchema } from "@/schemas/auth";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
@@ -18,25 +20,39 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { RegisterSchema } from "@/schemas/auth";
+import ErrorAlert from "@/components/auth/error-alert";
+import SucessAlert from "@/components/auth/success-alert";
+import { register } from "@/services/auth";
+import { StatusCode } from "@/types/services";
 
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    console.log(values);
+    setSuccessMessage("");
+    setErrorMessage("");
 
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    startTransition(() => {
+      register(values)
+        .then((res) => {
+          if (res.statusCode === StatusCode.CREATED) {
+            setSuccessMessage(res.message);
+          } else {
+            setErrorMessage(res.message);
+          }
+        })
+        .catch((err) => {
+          setErrorMessage(err.message);
+        });
+    });
   };
 
   return (
@@ -55,7 +71,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                     autoCapitalize="none"
                     placeholder="Username"
                     {...field}
-                    disabled={isLoading}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -76,7 +92,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                     autoCorrect="off"
                     placeholder="name@example.com"
                     {...field}
-                    disabled={isLoading}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -96,15 +112,17 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
                     autoComplete="current-password"
                     placeholder="Password"
                     {...field}
-                    disabled={isLoading}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button disabled={isLoading}>
-            {isLoading && (
+          <ErrorAlert message={errorMessage} />
+          <SucessAlert message={successMessage} />
+          <Button disabled={isPending}>
+            {isPending && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
             Create an account

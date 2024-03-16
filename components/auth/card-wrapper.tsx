@@ -25,7 +25,7 @@ const CardWrapper = ({
   backButtonHref,
 }: CardWrapperProps) => {
   return (
-    <Card className="mx-auto flex w-full flex-col justify-center sm:w-[400px]">
+    <Card className="mx-auto flex w-full flex-col justify-center sm:w-[400px] shadow">
       <CardHeader className="w-full flex justify-center items-center gap-2">
         <CardTitle>{headerTitle}</CardTitle>
         <CardDescription>{headerDescription}</CardDescription>

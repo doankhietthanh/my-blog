@@ -1,10 +1,12 @@
 "use client";
 
-import * as React from "react";
+import { useState, useTransition } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { LoginSchema } from "@/schemas/auth";
 
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
@@ -18,25 +20,39 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { LoginSchema } from "@/schemas/auth";
+import ErrorAlert from "@/components/auth/error-alert";
+import SucessAlert from "@/components/auth/success-alert";
+import { login } from "@/services/auth";
+import { StatusCode } from "@/types/services";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const LoginForm = ({ className, ...props }: LoginFormProps) => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values);
+    setSuccessMessage("");
+    setErrorMessage("");
 
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    startTransition(() => {
+      login(values)
+        .then((res) => {
+          if (res.statusCode === StatusCode.SUCCESS) {
+            setSuccessMessage(res.message);
+          } else {
+            setErrorMessage(res.message);
+          }
+        })
+        .catch((err) => {
+          setErrorMessage(err.message);
+        });
+    });
   };
 
   return (
@@ -57,7 +73,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
                     autoCorrect="off"
                     placeholder="name@example.com"
                     {...field}
-                    disabled={isLoading}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -77,15 +93,17 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
                     autoComplete="current-password"
                     placeholder="Password"
                     {...field}
-                    disabled={isLoading}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button disabled={isLoading}>
-            {isLoading && (
+          <ErrorAlert message={errorMessage} />
+          <SucessAlert message={successMessage} />
+          <Button disabled={isPending}>
+            {isPending && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
             Sign In
@@ -106,10 +124,10 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
         <Button
           variant="outline"
           type="button"
-          disabled={isLoading}
+          disabled={isPending}
           className="w-full"
         >
-          {isLoading ? (
+          {isPending ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Icons.gitHub className="mr-2 h-4 w-4" />
@@ -119,10 +137,10 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
         <Button
           variant="outline"
           type="button"
-          disabled={isLoading}
+          disabled={isPending}
           className="w-full"
         >
-          {isLoading ? (
+          {isPending ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Icons.google className="mr-2 h-4 w-4" />
