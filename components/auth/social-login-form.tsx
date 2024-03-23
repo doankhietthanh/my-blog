@@ -1,8 +1,8 @@
 "use client";
 
-import { signIn } from "@/auth";
+import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { SocialOAuthProvider } from "@/types/services";
+import { SocialOAuthProvider } from "@/types/providers";
 
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";

@@ -6,7 +6,7 @@ import * as z from "zod";
 import bcrypt from "bcryptjs";
 
 import { LoginSchema, RegisterSchema } from "@/schemas/auth";
-import { getUserByEmail } from "@/services/users";
+import { getUserByEmail } from "@/actions/users";
 
 import { BaseResponse, StatusCode } from "@/types/services";
 import { signIn } from "@/auth";
@@ -25,7 +25,7 @@ export const register = async (
     };
   }
 
-  const { username, email, password } = validatedFields.data;
+  const { name, email, password } = validatedFields.data;
   const hashPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
@@ -38,7 +38,7 @@ export const register = async (
 
   await db.user.create({
     data: {
-      username,
+      name,
       email,
       password: hashPassword,
     },
@@ -78,6 +78,11 @@ export const login = async (
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
+
+    return {
+      statusCode: StatusCode.SUCCESS,
+      message: "Login successful",
+    };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -96,9 +101,4 @@ export const login = async (
 
     throw error;
   }
-
-  return {
-    statusCode: StatusCode.SUCCESS,
-    message: "Login successful",
-  };
 };

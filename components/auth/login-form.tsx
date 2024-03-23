@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { login } from "@/services/auth";
+import { login } from "@/actions/auth";
 import { StatusCode } from "@/types/services";
 import { LoginSchema } from "@/schemas/auth";
 
@@ -25,7 +26,6 @@ import {
 import SocialLoginForm from "@/components/auth/social-login-form";
 import ErrorAlert from "@/components/auth/error-alert";
 import SucessAlert from "@/components/auth/success-alert";
-import { useSearchParams } from "next/navigation";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -51,14 +51,15 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
     startTransition(() => {
       login(values)
         .then((res) => {
-          if (res.statusCode === StatusCode.SUCCESS) {
-            setSuccessMessage(res.message);
+          console.log(res);
+          if (res?.statusCode === StatusCode.SUCCESS) {
+            setSuccessMessage(res?.message);
           } else {
-            setErrorMessage(res.message || urlError);
+            setErrorMessage(res?.message || urlError);
           }
         })
         .catch((err) => {
-          setErrorMessage(err.message);
+          setErrorMessage(err.message || urlError);
         });
     });
   };

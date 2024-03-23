@@ -5,7 +5,7 @@ import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
 import { LoginSchema } from "./schemas/auth";
-import { getUserByEmail } from "./services/users";
+import { getUserByEmail } from "./actions/users";
 
 export default {
   providers: [

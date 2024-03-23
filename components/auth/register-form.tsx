@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/form";
 import ErrorAlert from "@/components/auth/error-alert";
 import SucessAlert from "@/components/auth/success-alert";
-import { register } from "@/services/auth";
+import { register } from "@/actions/auth";
 import { StatusCode } from "@/types/services";
 
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -61,13 +61,13 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input
-                    type="username"
+                    type="name"
                     autoCapitalize="none"
                     placeholder="Username"
                     {...field}
