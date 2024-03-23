@@ -12,3 +12,8 @@ export interface BaseResponse {
   message: string;
   warnings?: object | null;
 }
+
+export enum SocialOAuthProvider {
+  GOOGLE = "google",
+  GITHUB = "github",
+}
