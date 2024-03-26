@@ -57,6 +57,27 @@ const config = {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
+        "main-orange": {
+          DEFAULT: "hsl(var(--main-orange))",
+        },
+        "main-yellow": {
+          DEFAULT: "hsl(var(--main-yellow))",
+        },
+        "main-gray": {
+          DEFAULT: "hsl(var(--main-gray))",
+        },
+        "main-black": {
+          DEFAULT: "hsl(var(--main-black))",
+        },
+        "main-black-2": {
+          DEFAULT: "hsl(var(--main-black-2))",
+        },
+        "main-brown": {
+          DEFAULT: "hsl(var(--main-brown))",
+        },
+        "main-blue": {
+          DEFAULT: "hsl(var(--main-blue))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

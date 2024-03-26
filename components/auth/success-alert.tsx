@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleCheckBigIcon } from "lucide-react";
 
 interface SucessAlertProps {
-  message: string;
+  message: string | undefined;
 }
 
 const SucessAlert = ({ message }: SucessAlertProps) => {

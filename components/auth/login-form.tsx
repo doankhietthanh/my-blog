@@ -37,8 +37,8 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
       : "";
 
   const [isPending, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
+  const [successMessage, setSuccessMessage] = useState<string | undefined>("");
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -52,11 +52,8 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
       login(values)
         .then((res) => {
           console.log(res);
-          if (res?.statusCode === StatusCode.SUCCESS) {
-            setSuccessMessage(res?.message);
-          } else {
-            setErrorMessage(res?.message || urlError);
-          }
+          setSuccessMessage(res?.success);
+          setErrorMessage(res?.error || urlError);
         })
         .catch((err) => {
           setErrorMessage(err.message || urlError);

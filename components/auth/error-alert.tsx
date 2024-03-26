@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TriangleAlertIcon } from "lucide-react";
 
 interface ErrorAlertProps {
-  message: string;
+  message: string | undefined;
 }
 
 const ErrorAlert = ({ message }: ErrorAlertProps) => {

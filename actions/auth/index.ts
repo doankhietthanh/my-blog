@@ -9,19 +9,18 @@ import { LoginSchema, RegisterSchema } from "@/schemas/auth";
 import { getUserByEmail } from "@/actions/users";
 
 import { BaseResponse, StatusCode } from "@/types/services";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
+import { generateVerificationToken } from "@/lib/token";
+import { sendVerificationEmail } from "@/lib/mail";
 
-export const register = async (
-  values: z.infer<typeof RegisterSchema>
-): Promise<BaseResponse> => {
+export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {
-      statusCode: StatusCode.BAD_REQUEST,
-      message: "Invalid fields",
+      error: "Invalid fields",
     };
   }
 
@@ -31,8 +30,7 @@ export const register = async (
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
     return {
-      statusCode: StatusCode.BAD_REQUEST,
-      message: "User already exists",
+      error: "User already exists",
     };
   }
 
@@ -44,31 +42,44 @@ export const register = async (
     },
   });
 
+  const verificationToken = await generateVerificationToken(email);
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
   return {
-    statusCode: StatusCode.CREATED,
-    message: "User created",
+    success: "Confirmation email sent!",
   };
 };
 
-export const login = async (
-  values: z.infer<typeof LoginSchema>
-): Promise<BaseResponse> => {
+export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {
-      statusCode: StatusCode.BAD_REQUEST,
-      message: "Invalid fields",
+      error: "Invalid fields",
     };
   }
 
   const { email, password } = validatedFields.data;
 
-  const user = await getUserByEmail(email);
-  if (!user) {
+  const existingUser = await getUserByEmail(email);
+  if (!existingUser || !existingUser.email || !existingUser.password) {
     return {
-      statusCode: StatusCode.BAD_REQUEST,
-      message: "User not found",
+      error: "User not found",
+    };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email
+    );
+
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+
+    return {
+      success: "Confirmation email sent!",
     };
   }
 
@@ -78,27 +89,28 @@ export const login = async (
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
-
-    return {
-      statusCode: StatusCode.SUCCESS,
-      message: "Login successful",
-    };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
           return {
-            statusCode: StatusCode.UNAUTHORIZED,
-            message: "Invalid credentials",
+            error: "Invalid credentials",
           };
         default:
           return {
-            statusCode: StatusCode.INTERNAL_SERVER_ERROR,
-            message: "Something went wrong",
+            error: "Something went wrong",
           };
       }
     }
 
     throw error;
   }
+
+  return {
+    success: "Login successful",
+  };
+};
+
+export const logout = async () => {
+  await signOut();
 };

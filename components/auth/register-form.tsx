@@ -23,14 +23,13 @@ import {
 import ErrorAlert from "@/components/auth/error-alert";
 import SucessAlert from "@/components/auth/success-alert";
 import { register } from "@/actions/auth";
-import { StatusCode } from "@/types/services";
 
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
+  const [successMessage, setSuccessMessage] = useState<string | undefined>("");
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -43,11 +42,8 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
     startTransition(() => {
       register(values)
         .then((res) => {
-          if (res.statusCode === StatusCode.CREATED) {
-            setSuccessMessage(res.message);
-          } else {
-            setErrorMessage(res.message);
-          }
+          setSuccessMessage(res.success);
+          setErrorMessage(res.error);
         })
         .catch((err) => {
           setErrorMessage(err.message);
