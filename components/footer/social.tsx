@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Social = () => {
   return (
-    <div className="flex h-full w-full items-center justify-center gap-3">
+    <div className="flex items-center justify-center gap-3">
       <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
         <Icons.gitHub className="h-6 w-6" />
         <span className="sr-only">GitHub</span>

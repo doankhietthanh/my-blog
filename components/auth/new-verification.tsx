@@ -32,14 +32,14 @@ export const NewVerificationForm = () => {
       .catch(() => {
         setErrorMessage("Something went wrong!");
       });
-  }, [token]);
+  }, [token, errorMessage, successMessage]);
 
   useEffect(() => {
     onSubmit();
   }, [onSubmit]);
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex items-center justify-center">
       {!successMessage && !errorMessage ? (
         <BeatLoader />
       ) : (
