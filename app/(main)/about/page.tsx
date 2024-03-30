@@ -1,5 +1,39 @@
+import { About, allAbouts } from "@/.contentlayer/generated";
+import RenderMdx from "@/components/render-mdx";
+import Image from "next/image";
+
 const AboutPage = () => {
-  return <div>About page</div>;
+  const about = allAbouts[0];
+  return (
+    <div className="flex flex-col gap-10 md:grid md:grid-cols-12">
+      <div className="col-span-4 xl:col-span-2">
+        <AboutInformation about={about} />
+      </div>
+      <div className="col-span-8 xl:col-span-10">
+        <RenderMdx mdxSource={about} />
+      </div>
+    </div>
+  );
 };
 
 export default AboutPage;
+
+const AboutInformation = ({ about }: { about: About }) => {
+  const avatarUrlReplace = about.avatar?.replace("../../public", "") || "";
+
+  return (
+    <div className="flex w-full flex-col items-center justify-center md:items-end md:justify-end">
+      <div className="flex w-48 flex-col items-center justify-center gap-3">
+        <Image
+          src={avatarUrlReplace}
+          alt="avatar"
+          width={192}
+          height={192}
+          className="rounded-lg"
+        />
+        <div className="text-xl font-semibold">{about.author}</div>
+        <div className="text-md font-light text-slate-500">{about.level}</div>
+      </div>
+    </div>
+  );
+};

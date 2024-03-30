@@ -1,20 +1,17 @@
-import { auth, signOut } from "@/auth";
+import { Separator } from "@/components/ui/separator";
+import AppearanceForm from "@/components/settings/appearance-form";
 
 const SettingsPage = async () => {
-  const session = await auth();
-
   return (
-    <div>
-      {JSON.stringify(session)}
-      <form
-        action={async () => {
-          "use server";
-
-          await signOut();
-        }}
-      >
-        <button type="submit">Sign out</button>
-      </form>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">General</h3>
+        <p className="text-sm text-muted-foreground">
+          Manage font family, color theme, and other appearance settings.
+        </p>
+      </div>
+      <Separator />
+      <AppearanceForm />
     </div>
   );
 };

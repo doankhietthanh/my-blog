@@ -1,5 +1,11 @@
+import Hero from "@/components/hero";
+
 const HomePage = () => {
-  return <div>Home Page</div>;
+  return (
+    <div className="container mx-auto py-12">
+      <Hero />
+    </div>
+  );
 };
 
 export default HomePage;

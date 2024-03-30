@@ -30,7 +30,7 @@ const SocialLoginForm = ({ isPending }: SocicalLoginFormProps) => {
           </span>
         </div>
       </div>
-      <div className="w-full flex justify-center items-center gap-2">
+      <div className="flex w-full items-center justify-center gap-2">
         <Button
           variant="outline"
           type="button"
@@ -41,7 +41,7 @@ const SocialLoginForm = ({ isPending }: SocicalLoginFormProps) => {
           {isPending ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Icons.gitHub className="mr-2 h-4 w-4" />
+            <Icons.github className="mr-2 h-4 w-4" />
           )}{" "}
           GitHub
         </Button>

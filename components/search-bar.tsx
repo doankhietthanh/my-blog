@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import { CircleIcon, FileIcon } from "lucide-react";
 import { docsConfig } from "@/config/docs";
@@ -21,8 +19,6 @@ import { docsConfig } from "@/config/docs";
 const SearchBar = () => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
-  const { setTheme } = useTheme();
-
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
@@ -54,7 +50,7 @@ const SearchBar = () => {
       <Button
         variant="outline"
         className={cn(
-          "relative h-8 w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64"
+          "relative h-8 w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64",
         )}
         onClick={() => setOpen(true)}
       >
@@ -79,7 +75,9 @@ const SearchBar = () => {
                     runCommand(() => router.push(navItem.href as string));
                   }}
                 >
-                  <FileIcon className="mr-2 h-4 w-4" />
+                  <div className="mr-2 flex h-4 w-4 items-center justify-center">
+                    <CircleIcon className="h-3 w-3" />
+                  </div>
                   {navItem.title}
                 </CommandItem>
               ))}
@@ -94,9 +92,7 @@ const SearchBar = () => {
                     runCommand(() => router.push(navItem.href as string));
                   }}
                 >
-                  <div className="mr-2 flex h-4 w-4 items-center justify-center">
-                    <CircleIcon className="h-3 w-3" />
-                  </div>
+                  <FileIcon className="mr-2 h-4 w-4" />
                   {navItem.title}
                 </CommandItem>
               ))}

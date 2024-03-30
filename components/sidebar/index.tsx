@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link, { LinkProps } from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
@@ -75,7 +75,7 @@ const Sidebar = () => {
                   >
                     {item.title}
                   </MobileLink>
-                )
+                ),
             )}
           </div>
           <div className="flex flex-col space-y-2">
@@ -127,6 +127,11 @@ function MobileLink({
   ...props
 }: MobileLinkProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const isActive =
+    (pathname === "/" && href === "/") ||
+    pathname === href ||
+    pathname?.startsWith(`${href}/`);
   return (
     <Link
       href={href}
@@ -134,7 +139,10 @@ function MobileLink({
         router.push(href.toString());
         onOpenChange?.(false);
       }}
-      className={cn(className)}
+      className={cn(
+        className,
+        isActive ? "text-primary" : "text-foreground/60",
+      )}
       {...props}
     >
       {children}
