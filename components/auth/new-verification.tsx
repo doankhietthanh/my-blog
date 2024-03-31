@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import ErrorAlert from "./error-alert";
-import SucessAlert from "./success-alert";
+import SuccessAlert from "./success-alert";
 
 export const NewVerificationForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
@@ -44,7 +44,7 @@ export const NewVerificationForm = () => {
         <BeatLoader />
       ) : (
         <>
-          <SucessAlert message={successMessage} />
+          <SuccessAlert message={successMessage} />
           <ErrorAlert message={errorMessage} />
         </>
       )}

@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import ErrorAlert from "@/components/auth/error-alert";
-import SucessAlert from "@/components/auth/success-alert";
+import SuccessAlert from "@/components/auth/success-alert";
 import { register } from "@/actions/auth";
 
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -116,7 +116,7 @@ export const RegisterForm = ({ className, ...props }: RegisterFormProps) => {
             )}
           />
           <ErrorAlert message={errorMessage} />
-          <SucessAlert message={successMessage} />
+          <SuccessAlert message={successMessage} />
           <Button disabled={isPending}>
             {isPending && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import BackButton from "./back-button";
+import Logo from "@/components/logo";
 
 interface CardWrapperProps {
   children: React.ReactNode;
@@ -25,13 +26,14 @@ const CardWrapper = ({
   backButtonHref,
 }: CardWrapperProps) => {
   return (
-    <Card className="mx-auto flex w-full flex-col justify-center sm:w-[400px] shadow">
-      <CardHeader className="w-full flex justify-center items-center gap-2">
+    <Card className="mx-auto flex w-full flex-col justify-center shadow sm:w-[400px]">
+      <CardHeader className="flex w-full items-center justify-center gap-2">
+        <Logo />
         <CardTitle>{headerTitle}</CardTitle>
         <CardDescription>{headerDescription}</CardDescription>
       </CardHeader>
       <CardContent>{children}</CardContent>
-      <CardFooter className="w-full flex flex-col justify-center items-center gap-2">
+      <CardFooter className="flex w-full flex-col items-center justify-center gap-2">
         <BackButton title={backButtonTitle} href={backButtonHref} />
         <p className="px-8 text-center text-sm text-muted-foreground">
           By clicking continue, you agree to our{" "}

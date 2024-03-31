@@ -5,7 +5,7 @@ interface SucessAlertProps {
   message: string | undefined;
 }
 
-const SucessAlert = ({ message }: SucessAlertProps) => {
+const SuccessAlert = ({ message }: SucessAlertProps) => {
   if (!message) return;
 
   return (
@@ -17,4 +17,4 @@ const SucessAlert = ({ message }: SucessAlertProps) => {
   );
 };
 
-export default SucessAlert;
+export default SuccessAlert;

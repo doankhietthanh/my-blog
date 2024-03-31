@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import SocialLoginForm from "@/components/auth/social-login-form";
 import ErrorAlert from "@/components/auth/error-alert";
-import SucessAlert from "@/components/auth/success-alert";
+import SuccessAlert from "@/components/auth/success-alert";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -108,7 +108,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
             )}
           />
           <ErrorAlert message={errorMessage} />
-          <SucessAlert message={successMessage} />
+          <SuccessAlert message={successMessage} />
           <Button disabled={isPending}>
             {isPending && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
