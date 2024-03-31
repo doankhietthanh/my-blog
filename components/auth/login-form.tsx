@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { login } from "@/actions/auth";
-import { StatusCode } from "@/types/services";
 import { LoginSchema } from "@/schemas/auth";
 
 import { cn } from "@/lib/utils";
@@ -37,7 +36,9 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
       : "";
 
   const [isPending, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState<string | undefined>("");
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    urlError,
+  );
   const [successMessage, setSuccessMessage] = useState<string | undefined>("");
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -51,7 +52,7 @@ export const LoginForm = ({ className, ...props }: LoginFormProps) => {
     startTransition(() => {
       login(values)
         .then((res) => {
-          console.log(res);
+          console.log(res.error, urlError);
           setSuccessMessage(res?.success);
           setErrorMessage(res?.error || urlError);
         })
