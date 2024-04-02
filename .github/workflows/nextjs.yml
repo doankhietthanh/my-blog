@@ -1,20 +1,27 @@
-name: Deploy Next.js site to Pages
-
+name: publish-to-github-pages
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout 🛎️
         uses: actions/checkout@v4
-      - name: Print Auth Secret
-        run: echo ${{ secrets.AUTH_SECRET }}
-      - name: Create .env file
+
+      - name: Create .env file 🔑
         run: |
           echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" > .env 
             echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
@@ -28,23 +35,45 @@ jobs:
             echo "SMTP_EMAIL=${{ secrets.SMTP_EMAIL }}" >> .env
             echo "SMTP_PASSWORD=${{ secrets.SMTP_PASSWORD }}" >> .env
 
-      - name: Install dependencies
-        run: npm install --force
-      - name: Build
-        run: npm run build
-      - name: Upload artifact
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache dependencies ⚡
+        id: cache_dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies 🔧
+        shell: bash
+        if: steps.cache_dependencies.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Setup Pages ⚙️
+        uses: actions/configure-pages@v4
+        with:
+          static_site_generator: next
+
+      - name: Build with Next.js 🏗️
+        run: npx next build
+
+      - name: Upload artifact 📡
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     needs: build
+
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Publish to GitHub Pages 🚀
         id: deployment
         uses: actions/deploy-pages@v4
