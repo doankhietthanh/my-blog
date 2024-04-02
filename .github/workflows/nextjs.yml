@@ -16,6 +16,20 @@ jobs:
         run: npm install --force
       - name: Build
         run: npm run build
+        # environment variable
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+          NEXT_PUBLIC_APP_URL: ${{ env.NEXT_PUBLIC_APP_URL }}
+          AUTH_SECRET: ${{ env.AUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ env.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ env.GOOGLE_CLIENT_SECRET }}
+          GITHUB_CLIENT_ID: ${{ env.GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ env.GITHUB_CLIENT_SECRET }}
+          SMTP_SERVICE: ${{ env.SMTP_SERVICE }}
+          SMTP_HOST: ${{ env.SMTP_HOST }}
+          SMTP_EMAIL: ${{ env.SMTP_EMAIL }}
+          SMTP_PASSWORD: ${{ env.SMTP_PASSWORD }}
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
