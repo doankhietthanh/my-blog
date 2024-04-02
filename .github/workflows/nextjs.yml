@@ -18,17 +18,17 @@ jobs:
         run: npm run build
         # environment variable
         env:
-          DATABASE_URL: ${{ env.DATABASE_URL }}
-          NEXT_PUBLIC_APP_URL: ${{ env.NEXT_PUBLIC_APP_URL }}
-          AUTH_SECRET: ${{ env.AUTH_SECRET }}
-          GOOGLE_CLIENT_ID: ${{ env.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ env.GOOGLE_CLIENT_SECRET }}
-          GITHUB_CLIENT_ID: ${{ env.GITHUB_CLIENT_ID }}
-          GITHUB_CLIENT_SECRET: ${{ env.GITHUB_CLIENT_SECRET }}
-          SMTP_SERVICE: ${{ env.SMTP_SERVICE }}
-          SMTP_HOST: ${{ env.SMTP_HOST }}
-          SMTP_EMAIL: ${{ env.SMTP_EMAIL }}
-          SMTP_PASSWORD: ${{ env.SMTP_PASSWORD }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+          SMTP_SERVICE: ${{ secrets.SMTP_SERVICE }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
